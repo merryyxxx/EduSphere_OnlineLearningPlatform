@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} - EduSphere{% endblock %}
+
+{% block content %}
+<!-- Course Header -->
+<div class="bg-navy text-white py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3" style="background: transparent;">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-white opacity-75">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('courses') }}" class="text-white opacity-75">Courses</a></li>
+                <li class="breadcrumb-item active text-white">{{ course.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge badge-warning mb-3">{{ course.category.name }}</span>
+                <h1 class="display-4 fw-bold mb-3">{{ course.title }}</h1>
+                <p class="lead opacity-90 mb-4">{{ course.description[:150] }}...</p>
+                
+                <div class="d-flex flex-wrap gap-4 align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-white bg-opacity-10 rounded-circle p-2 me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <small class="opacity-75 d-block">Instructor</small>
+                            <strong>{{ course.instructor.name }}</strong>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <small class="opacity-75 d-block">Rating</small>
+                        <strong>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            {{ "%.1f"|format(course.get_average_rating()) }}
+                            <span class="opacity-75">({{ course.reviews|length }} reviews)</span>
+                        </strong>
+                    </div>
+                    
+                    <div>
+                        <small class="opacity-75 d-block">Students Enrolled</small>
+                        <strong><i class="bi bi-people-fill"></i> {{ course.get_enrollment_count() }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Course Main Content -->
+        <div class="col-lg-8">
+            <!-- About Course -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h3 class="text-navy mb-4">About This Course</h3>
+                    <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.8;">
+                        {{ course.description }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- What You'll Learn -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h3 class="text-navy mb-4">What You'll Learn</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-3" style="font-size: 1.3rem;"></i>
+                                <p class="mb-0">Master the fundamentals and advanced concepts</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-3" style="font-size: 1.3rem;"></i>
+                                <p class="mb-0">Build real-world projects from scratch</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-3" style="font-size: 1.3rem;"></i>
+                                <p class="mb-0">Earn a professional certificate of completion</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <i class="bi bi-check-circle-fill text-success me-3" style="font-size: 1.3rem;"></i>
+                                <p class="mb-0">Learn from industry experts and professionals</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructor Info -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h3 class="text-navy mb-4">Meet Your Instructor</h3>
+                    <div class="d-flex align-items-start">
+                        <div class="bg-navy text-white rounded-circle d-flex align-items-center justify-content-center me-4" 
+                             style="width: 80px; height: 80px; font-size: 2rem; flex-shrink: 0;">
+                            {{ course.instructor.name[0] }}
+                        </div>
+                        <div>
+                            <h5 class="text-navy mb-2">{{ course.instructor.name }}</h5>
+                            <p class="text-muted mb-2">
+                                <i class="bi bi-award"></i> {{ course.instructor.courses_taught|length }} Courses
+                            </p>
+                            {% if course.instructor.bio %}
+                            <p class="mb-0">{{ course.instructor.bio }}</p>
+                            {% else %}
+                            <p class="mb-0">Professional instructor with years of industry experience in {{ course.category.name }}.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <h3 class="text-navy mb-4">Student Reviews</h3>
+                    
+                    {% if reviews %}
+                        {% for review in reviews[:5] %}
+                        <div class="mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-cream rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 45px; height: 45px;">
+                                        <i class="bi bi-person-fill text-navy"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-navy">{{ review.reviewer.name }}</h6>
+                                        <small class="text-muted">{{ review.created_at|date }}</small>
+                                    </div>
+                                </div>
+                                <div class="text-warning">
+                                    {% for i in range(review.rating) %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - review.rating) %}
+                                        <i class="bi bi-star"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% if review.comment %}
+                            <p class="mb-0 ms-5 ps-3">{{ review.comment }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-quote" style="font-size: 3rem; color: var(--text-muted);"></i>
+                            <p class="text-muted mt-3 mb-0">No reviews yet. Be the first to review this course!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card sticky-top" style="top: 100px;">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h2 class="text-navy fw-bold mb-0">{{ course.price|currency }}</h2>
+                        <small class="text-muted">One-time payment</small>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-4">
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.role == 'student' %}
+                                {% if is_enrolled %}
+                                    <button class="btn btn-success btn-lg" disabled>
+                                        <i class="bi bi-check-circle"></i> Already Enrolled
+                                    </button>
+                                {% else %}
+                                    <a href="{{ url_for('enroll_course', course_id=course.id) }}" 
+                                       class="btn btn-primary btn-lg">
+                                        <i class="bi bi-cart-plus"></i> Enroll Now
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <button class="btn btn-secondary btn-lg" disabled>
+                                    Available for Students Only
+                                </button>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Login to Enroll
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="text-navy mb-3">This Course Includes:</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="bi bi-clock-fill text-primary me-2"></i>
+                            <strong>{{ course.duration }}</strong> of content
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-infinity text-primary me-2"></i>
+                            <strong>Lifetime</strong> access
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-phone-fill text-primary me-2"></i>
+                            Access on <strong>mobile & desktop</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-award-fill text-primary me-2"></i>
+                            <strong>Certificate</strong> of completion
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                            <strong>{{ course.level }}</strong> level
+                        </li>
+                    </ul>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <small class="text-muted d-block mb-2">
+                            <i class="bi bi-calendar"></i> Created: {{ course.created_at|date }}
+                        </small>
+                        <small class="text-muted d-block">
+                            <i class="bi bi-arrow-clockwise"></i> Updated: {{ course.updated_at|date }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

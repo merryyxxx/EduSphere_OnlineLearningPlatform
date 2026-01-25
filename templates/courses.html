@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Courses - EduSphere{% endblock %}
+
+{% block content %}
+<div class="bg-cream-light py-5">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-lg-12 text-center">
+                <h1 class="display-4 fw-bold text-navy">Discover Your Next Course</h1>
+                <p class="lead text-secondary">Explore our comprehensive library of expert-led courses</p>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form method="GET" action="{{ url_for('courses') }}" class="row g-3">
+                            <div class="col-md-8">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white">
+                                        <i class="bi bi-search text-navy"></i>
+                                    </span>
+                                    <input type="text" name="search" class="form-control" 
+                                           placeholder="Search for courses, skills, or topics..." 
+                                           value="{{ search or '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-select form-select-lg" name="category" onchange="this.form.submit()">
+                                    <option value="">All Categories</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                            {% if selected_category == category.id %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                    <i class="bi bi-search"></i> Search Courses
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Courses Grid -->
+<div class="container my-5">
+    <!-- Results Info -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="text-navy mb-0">
+                    {% if search %}
+                        Search results for "{{ search }}"
+                    {% elif selected_category %}
+                        {% for cat in categories if cat.id == selected_category %}
+                            {{ cat.name }} Courses
+                        {% endfor %}
+                    {% else %}
+                        All Courses
+                    {% endif %}
+                    <span class="badge badge-primary ms-2">{{ courses.total }} courses</span>
+                </h4>
+                
+                {% if search or selected_category %}
+                <a href="{{ url_for('courses') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Clear Filters
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Cards Grid -->
+    <div class="row g-4">
+        {% if courses.items %}
+            {% for course in courses.items %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card course-card h-100">
+                    <div class="position-relative">
+                        <div class="card-img-top d-flex align-items-center justify-content-center" 
+                             style="background: linear-gradient(135deg, {{ ['#5b8cc9', '#4ecdc4', '#ffd94d', '#ff6b4a', '#8b5cf6', '#ec4899'][loop.index0 % 6] }} 0%, {{ ['#3d4d65', '#2d7a6e', '#e8a800', '#c23616', '#6d28d9', '#be185d'][loop.index0 % 6] }} 100%);">
+                            <i class="bi bi-{{ ['laptop', 'graph-up', 'phone', 'palette', 'briefcase', 'megaphone'][loop.index0 % 6] }}" 
+                               style="font-size: 4rem; color: white;"></i>
+                        </div>
+                        <span class="course-badge">{{ course.category.name }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex gap-2 mb-2">
+                            <span class="badge badge-info">{{ course.level }}</span>
+                            <span class="badge badge-success">
+                                <i class="bi bi-star-fill"></i> {{ "%.1f"|format(course.get_average_rating()) }}
+                            </span>
+                        </div>
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">{{ course.description[:120] }}{% if course.description|length > 120 %}...{% endif %}</p>
+                        
+                        <div class="course-meta">
+                            <span><i class="bi bi-person"></i> {{ course.instructor.name }}</span>
+                            <span><i class="bi bi-people"></i> {{ course.get_enrollment_count() }}</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 2px solid var(--border-color);">
+                            <div>
+                                <span class="h4 mb-0 text-navy fw-bold">{{ course.price|currency }}</span>
+                                <br><small class="text-muted"><i class="bi bi-clock"></i> {{ course.duration }}</small>
+                            </div>
+                            <a href="{{ url_for('course_details', course_id=course.id) }}" 
+                               class="btn btn-primary">
+                                View Course
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 5rem; color: var(--text-muted);"></i>
+                        <h3 class="mt-4 text-navy">No Courses Found</h3>
+                        <p class="text-muted mb-4">
+                            {% if search %}
+                                We couldn't find any courses matching "{{ search }}". Try different keywords or browse all courses.
+                            {% else %}
+                                No courses available in this category yet.
+                            {% endif %}
+                        </p>
+                        <a href="{{ url_for('courses') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left"></i> View All Courses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if courses.pages > 1 %}
+    <nav aria-label="Course pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if courses.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('courses', page=courses.prev_num, search=search, category=selected_category) }}">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="bi bi-chevron-left"></i> Previous</span>
+            </li>
+            {% endif %}
+            
+            {% for page_num in courses.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    <li class="page-item {% if page_num == courses.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('courses', page=page_num, search=search, category=selected_category) }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if courses.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('courses', page=courses.next_num, search=search, category=selected_category) }}">
+                    Next <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Next <i class="bi bi-chevron-right"></i></span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

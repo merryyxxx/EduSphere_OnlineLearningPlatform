@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}EduSphere - Smart Web-Based Learning Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h1>Learn Without Limits</h1>
+                <p class="lead">
+                    Discover thousands of courses from expert instructors. 
+                    Build skills, earn certificates, and achieve your career goals with EduSphere.
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{{ url_for('courses') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-search"></i> Explore Courses
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">
+                        <i class="bi bi-person-plus"></i> Get Started Free
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Hero Stats -->
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-number">1,000+</span>
+                        <span class="stat-label">Expert Courses</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Active Students</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Instructors</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <div style="background: linear-gradient(135deg, #5b8cc9 0%, #3d4d65 100%); border-radius: 30px; padding: 60px 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+                        <i class="bi bi-mortarboard-fill" style="font-size: 8rem; color: #ffd94d;"></i>
+                        <h3 class="text-white mt-4 mb-3">Your Learning Journey Starts Here</h3>
+                        <p class="text-white opacity-75">Join thousands of learners worldwide</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="featured-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Featured Courses</h2>
+            <p class="section-subtitle">Start learning from our most popular and highly-rated courses</p>
+        </div>
+        
+        <div class="row g-4">
+            {% if courses %}
+                {% for course in courses %}
+                {% set gradient_colors = [
+                    {'start': '#5b8cc9', 'end': '#3d4d65'},
+                    {'start': '#4ecdc4', 'end': '#2d7a6e'},
+                    {'start': '#ffd94d', 'end': '#e8a800'},
+                    {'start': '#ff6b4a', 'end': '#c23616'},
+                    {'start': '#8b5cf6', 'end': '#6d28d9'},
+                    {'start': '#ec4899', 'end': '#be185d'}
+                ] %}
+                {% set icons = ['laptop', 'graph-up', 'phone', 'palette', 'briefcase', 'megaphone'] %}
+                {% set color_index = loop.index0 % 6 %}
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card course-card h-100">
+                        <div class="position-relative">
+                            <div class="card-img-top d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, {{ gradient_colors[color_index].start }} 0%, {{ gradient_colors[color_index].end }} 100%); height: 200px;">
+                                <i class="bi bi-{{ icons[color_index] }}" style="font-size: 4rem; color: white;"></i>
+                            </div>
+                            <span class="course-badge">{{ course.category.name }}</span>
+                        </div>
+                        <div class="card-body">
+                            <span class="badge badge-info mb-2">{{ course.level }}</span>
+                            <h5 class="card-title">{{ course.title }}</h5>
+                            <p class="card-text">
+                                {% if course.description|length > 100 %}
+                                    {{ course.description[:100] }}...
+                                {% else %}
+                                    {{ course.description }}
+                                {% endif %}
+                            </p>
+                            
+                            <div class="course-meta">
+                                <span><i class="bi bi-person"></i> {{ course.instructor.name }}</span>
+                                <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="h4 mb-0 text-navy fw-bold">{{ course.price|currency }}</span>
+                                <a href="{{ url_for('course_details', course_id=course.id) }}" class="btn btn-primary">
+                                    View Details <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 4rem; color: var(--text-muted);"></i>
+                        <h4 class="mt-3">No courses available yet</h4>
+                        <p class="text-muted">Check back soon for exciting new courses!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('courses') }}" class="btn btn-primary btn-lg">
+                View All Courses <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Explore By Category</h2>
+            <p class="section-subtitle">Choose from a wide range of topics and start learning today</p>
+        </div>
+        
+        <div class="row g-4">
+            {% if categories %}
+                {% set category_icons = ['code-slash', 'graph-up-arrow', 'phone', 'palette', 'briefcase', 'megaphone'] %}
+                {% for category in categories %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a href="{{ url_for('courses', category=category.id) }}" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="bi bi-{{ category_icons[loop.index0 % 6] }}"></i>
+                            </div>
+                            <h5>{{ category.name }}</h5>
+                            <p>{{ category.courses|length }} courses available</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-folder" style="font-size: 4rem; color: var(--text-muted);"></i>
+                        <h4 class="mt-3">No categories available yet</h4>
+                        <p class="text-muted">Categories will be added soon!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="featured-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose EduSphere?</h2>
+            <p class="section-subtitle">Experience the best online learning platform with cutting-edge features</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="card feature-card text-center h-100">
+                    <div class="card-body">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-laptop"></i>
+                        </div>
+                        <h5 class="card-title">Learn Anywhere</h5>
+                        <p class="card-text">Access courses from any device, anytime, anywhere. Learn at your own pace.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card feature-card text-center h-100">
+                    <div class="card-body">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h5 class="card-title">Expert Instructors</h5>
+                        <p class="card-text">Learn from industry professionals and experienced educators.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card feature-card text-center h-100">
+                    <div class="card-body">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <h5 class="card-title">Certificates</h5>
+                        <p class="card-text">Earn certificates upon course completion to showcase your skills.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card feature-card text-center h-100">
+                    <div class="card-body">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-infinity"></i>
+                        </div>
+                        <h5 class="card-title">Lifetime Access</h5>
+                        <p class="card-text">Get unlimited access to your enrolled courses forever.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="categories-section">
+    <div class="container">
+        <div class="card" style="background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-darker) 100%); border: none;">
+            <div class="card-body text-center py-5">
+                <h2 class="text-white mb-3">Ready to Start Your Learning Journey?</h2>
+                <p class="text-white opacity-75 mb-4 lead">Join thousands of students and start learning today!</p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-warning btn-lg me-2">
+                    <i class="bi bi-person-plus"></i> Sign Up Now
+                </a>
+                <a href="{{ url_for('courses') }}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-search"></i> Browse Courses
+                </a>
+                {% else %}
+                <a href="{{ url_for('courses') }}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-search"></i> Explore More Courses
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

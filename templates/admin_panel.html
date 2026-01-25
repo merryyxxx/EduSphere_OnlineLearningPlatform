@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - EduSphere{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<div class="bg-navy text-white py-5">
+    <div class="container-fluid">
+        <h1 class="display-5 fw-bold mb-2">
+            <i class="bi bi-shield-lock-fill"></i> Admin Control Panel
+        </h1>
+        <p class="lead opacity-90 mb-0">Manage users, courses, and platform settings</p>
+    </div>
+</div>
+
+<div class="container-fluid my-5">
+    <!-- Stats Dashboard -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #5b8cc9 0%, #1a2332 100%); border: none;">
+                <div class="card-body text-white p-4 text-center">
+                    <i class="bi bi-people-fill" style="font-size: 3rem; opacity: 0.8;"></i>
+                    <h2 class="fw-bold mt-3 mb-1">{{ stats.total_users }}</h2>
+                    <p class="mb-0 opacity-75">Total Users</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #4ecdc4 0%, #2d7a6e 100%); border: none;">
+                <div class="card-body text-white p-4 text-center">
+                    <i class="bi bi-journal-bookmark-fill" style="font-size: 3rem; opacity: 0.8;"></i>
+                    <h2 class="fw-bold mt-3 mb-1">{{ stats.total_courses }}</h2>
+                    <p class="mb-0 opacity-75">Total Courses</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #ffd94d 0%, #e8a800 100%); border: none;">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-collection-fill" style="font-size: 3rem; opacity: 0.8; color: #1a2332;"></i>
+                    <h2 class="fw-bold mt-3 mb-1" style="color: #1a2332;">{{ stats.total_enrollments }}</h2>
+                    <p class="mb-0" style="color: #1a2332; opacity: 0.75;">Total Enrollments</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card h-100" style="background: linear-gradient(135deg, #ff6b4a 0%, #c23616 100%); border: none;">
+                <div class="card-body text-white p-4 text-center">
+                    <i class="bi bi-folder-fill" style="font-size: 3rem; opacity: 0.8;"></i>
+                    <h2 class="fw-bold mt-3 mb-1">{{ stats.total_categories }}</h2>
+                    <p class="mb-0 opacity-75">Categories</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" role="tablist" style="border-bottom: 3px solid #e8e9ec;">
+        <li class="nav-item">
+            <button class="nav-link active fw-semibold" data-bs-toggle="tab" data-bs-target="#users" style="color: #1a2332;">
+                <i class="bi bi-people"></i> Users Management
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#courses" style="color: #1a2332;">
+                <i class="bi bi-book"></i> Courses Overview
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#categories" style="color: #1a2332;">
+                <i class="bi bi-folder"></i> Categories
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Users Tab -->
+        <div class="tab-pane fade show active" id="users">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #faf7f2;">
+                    <h5 class="mb-0 fw-bold" style="color: #1a2332;"><i class="bi bi-people"></i> All Platform Users</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User Details</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td><strong style="color: #1a2332;">#{{ user.id }}</strong></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                                 style="width: 40px; height: 40px; background-color: #f5e6d3;">
+                                                <i class="bi bi-person-fill" style="color: #1a2332;"></i>
+                                            </div>
+                                            <strong>{{ user.name }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.role == 'admin' %}
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-shield-fill"></i> {{ user.role|capitalize }}
+                                            </span>
+                                        {% elif user.role == 'instructor' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-person-video3"></i> {{ user.role|capitalize }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-person"></i> {{ user.role|capitalize }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</small></td>
+                                    <td>
+                                        {% if user.id != current_user.id %}
+                                        <button class="btn btn-sm btn-outline-danger" 
+                                                onclick="confirmUserDelete({{ user.id }}, '{{ user.name }}')">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                        {% else %}
+                                        <span class="badge bg-info">Current User</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Tab -->
+        <div class="tab-pane fade" id="courses">
+            <div class="card shadow-sm">
+                <div class="card-header" style="background-color: #faf7f2;">
+                    <h5 class="mb-0 fw-bold" style="color: #1a2332;"><i class="bi bi-book"></i> All Platform Courses</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Course Title</th>
+                                    <th>Instructor</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Students</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td><strong style="color: #1a2332;">#{{ course.id }}</strong></td>
+                                    <td><strong>{{ course.title }}</strong></td>
+                                    <td>{{ course.instructor.name }}</td>
+                                    <td><span class="badge bg-primary">{{ course.category.name }}</span></td>
+                                    <td><strong class="text-success">{{ '${:,.2f}'.format(course.price) }}</strong></td>
+                                    <td>
+                                        <i class="bi bi-people-fill text-primary"></i> 
+                                        {{ course.enrollments|length if course.enrollments else 0 }}
+                                    </td>
+                                    <td><small>{{ course.created_at.strftime('%Y-%m-%d') if course.created_at else 'N/A' }}</small></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Tab -->
+        <div class="tab-pane fade" id="categories">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add New Category</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST" action="{{ url_for('add_category') }}">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Category Name *</label>
+                                    <input type="text" name="name" class="form-control" 
+                                           placeholder="e.g., Web Development" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Description</label>
+                                    <textarea name="description" class="form-control" 
+                                              rows="3" placeholder="Brief description of the category"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                    <i class="bi bi-plus-circle"></i> Add Category
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header" style="background-color: #faf7f2;">
+                            <h5 class="mb-0 fw-bold" style="color: #1a2332;"><i class="bi bi-folder"></i> Existing Categories</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Category Name</th>
+                                            <th>Description</th>
+                                            <th>Total Courses</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for category in categories %}
+                                        <tr>
+                                            <td><strong style="color: #1a2332;">#{{ category.id }}</strong></td>
+                                            <td><strong>{{ category.name }}</strong></td>
+                                            <td><small class="text-muted">{{ category.description if category.description else 'No description' }}</small></td>
+                                            <td>
+                                                <span class="badge bg-info">{{ category.courses|length }} courses</span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-danger" 
+                                                        onclick="confirmCategoryDelete({{ category.id }}, '{{ category.name }}', {{ category.courses|length }})">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: none; border-radius: 10px;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Delete User
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-0">Are you sure you want to delete user <strong id="userName" style="color: #1a2332;"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmUserDeleteBtn" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete User
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Category Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: none; border-radius: 10px;">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Delete Category
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-2">Delete category <strong id="categoryName" style="color: #1a2332;"></strong>?</p>
+                <div id="categoryWarning" class="alert alert-danger d-none mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    This category has courses and cannot be deleted.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmCategoryDeleteBtn" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete Category
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmUserDelete(userId, userName) {
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('confirmUserDeleteBtn').href = 
+        "{{ url_for('delete_user', user_id=0) }}".replace('0', userId);
+    new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
+}
+
+function confirmCategoryDelete(categoryId, categoryName, courseCount) {
+    document.getElementById('categoryName').textContent = categoryName;
+    const warning = document.getElementById('categoryWarning');
+    const deleteBtn = document.getElementById('confirmCategoryDeleteBtn');
+    
+    if (courseCount > 0) {
+        warning.classList.remove('d-none');
+        deleteBtn.classList.add('disabled');
+    } else {
+        warning.classList.add('d-none');
+        deleteBtn.classList.remove('disabled');
+        deleteBtn.href = "{{ url_for('delete_category', category_id=0) }}".replace('0', categoryId);
+    }
+    
+    new bootstrap.Modal(document.getElementById('deleteCategoryModal')).show();
+}
+</script>
+{% endblock %}

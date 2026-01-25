@@ -1,0 +1,954 @@
+/* ==========================================
+   EduSphere - Modern Warm Theme
+   Cream, Navy Blue & Yellow Design
+   ========================================== */
+
+/* Import the exact design provided */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
+
+/* Root Variables - Warm Modern Theme */
+:root {
+    /* Primary Colors */
+    --cream-bg: #f5ead6;
+    --cream-light: #fdf8f1;
+    --navy-dark: #3d4d65;
+    --navy-darker: #2c3a4d;
+    --card-bg: #ffffff;
+    
+    /* Accent Colors */
+    --accent-yellow: #ffd94d;
+    --accent-navy: #4a5d7c;
+    --accent-blue: #5b8cc9;
+    --accent-orange: #ff6b4a;
+    --accent-green: #4ecdc4;
+    
+    /* Text Colors */
+    --text-primary: #2c3a4d;
+    --text-secondary: #5a6c84;
+    --text-muted: #8492a6;
+    --text-white: #ffffff;
+    
+    /* UI Elements */
+    --border-color: #e5dcc8;
+    --border-radius: 20px;
+    --border-radius-sm: 12px;
+    --border-radius-lg: 30px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --box-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2.5rem;
+    --spacing-xl: 4rem;
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--cream-bg);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+    flex: 1;
+    background-color: var(--cream-bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: 3.5rem; font-weight: 800; }
+h2 { font-size: 2.5rem; font-weight: 700; }
+h3 { font-size: 2rem; font-weight: 700; }
+h4 { font-size: 1.5rem; font-weight: 600; }
+
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--navy-dark);
+}
+
+/* ==========================================
+   NAVBAR - Cream Background
+   ========================================== */
+
+.navbar {
+    background-color: var(--cream-light) !important;
+    border-bottom: 2px solid var(--border-color);
+    padding: 1.2rem 0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--navy-dark) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.03em;
+}
+
+.navbar-brand i {
+    color: var(--accent-blue);
+    font-size: 1.8rem;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    padding: 0.6rem 1.2rem !important;
+    margin: 0 0.2rem;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--navy-dark) !important;
+    background-color: rgba(74, 93, 124, 0.08);
+}
+
+.nav-link.active {
+    color: var(--navy-dark) !important;
+    background-color: rgba(74, 93, 124, 0.12);
+    font-weight: 600;
+}
+
+.navbar-toggler {
+    border-color: var(--navy-dark);
+}
+
+.dropdown-menu {
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--box-shadow);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+    padding: 0.7rem 1.5rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--cream-light);
+    color: var(--navy-dark);
+}
+
+/* ==========================================
+   HERO SECTION - Cream with Yellow Accent
+   ========================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, var(--cream-light) 0%, var(--cream-bg) 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 75vh;
+    padding: var(--spacing-xl) 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -5%;
+    width: 600px;
+    height: 600px;
+    background: var(--accent-yellow);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    background: rgba(91, 140, 201, 0.15);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section .row {
+    align-items: center;
+}
+
+.hero-section h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+    color: var(--navy-dark);
+}
+
+.hero-section .lead {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    max-width: 500px;
+    line-height: 1.7;
+}
+
+/* Hero Stats */
+.hero-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.hero-stat {
+    text-align: left;
+}
+
+.hero-stat .stat-number {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--navy-dark);
+    display: block;
+    line-height: 1;
+}
+
+.hero-stat .stat-label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+}
+
+/* ==========================================
+   BUTTONS - Navy & Yellow Theme
+   ========================================== */
+
+.btn {
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    padding: 0.85rem 2rem;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: var(--navy-dark);
+    color: white;
+    box-shadow: 0 4px 12px rgba(61, 77, 101, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: var(--navy-darker);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(61, 77, 101, 0.4);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--navy-dark);
+    border: 2px solid var(--navy-dark);
+}
+
+.btn-secondary:hover {
+    background-color: var(--navy-dark);
+    color: white;
+    border-color: var(--navy-dark);
+}
+
+.btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn-outline-light:hover {
+    background: white;
+    color: var(--navy-dark);
+}
+
+.btn-outline-secondary {
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    background: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--cream-light);
+    border-color: var(--navy-dark);
+    color: var(--navy-dark);
+}
+
+.btn-warning {
+    background-color: var(--accent-yellow);
+    color: var(--navy-dark);
+    font-weight: 700;
+}
+
+.btn-warning:hover {
+    background-color: #ffed4e;
+    transform: translateY(-2px);
+    color: var(--navy-dark);
+}
+
+.btn-success {
+    background-color: var(--accent-green);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #3db8af;
+    color: white;
+}
+
+.btn-info {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #4a78b5;
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--accent-orange);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #e65a3f;
+    color: white;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--navy-dark);
+    color: var(--navy-dark);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--navy-dark);
+    color: white;
+}
+
+.btn-outline-warning {
+    border: 2px solid var(--accent-yellow);
+    color: var(--navy-dark);
+    background: transparent;
+}
+
+.btn-outline-warning:hover {
+    background-color: var(--accent-yellow);
+    color: var(--navy-dark);
+}
+
+.btn-outline-danger {
+    border: 2px solid var(--accent-orange);
+    color: var(--accent-orange);
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--accent-orange);
+    color: white;
+}
+
+/* ==========================================
+   CARDS - White Cards on Cream
+   ========================================== */
+
+.card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: var(--accent-blue);
+}
+
+.card-body {
+    padding: var(--spacing-md);
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--navy-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-text {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.card-header {
+    background-color: var(--cream-light);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--navy-dark);
+}
+
+/* Feature Cards - Navy Background */
+.feature-card {
+    background-color: var(--navy-dark);
+    color: white;
+    border: none;
+    padding: var(--spacing-lg);
+}
+
+.feature-card:hover {
+    background-color: var(--navy-darker);
+}
+
+.feature-card .card-title {
+    color: white;
+}
+
+.feature-card .card-text {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.feature-card .feature-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Course Cards */
+.course-card {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.course-card .course-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent-yellow);
+    color: var(--navy-dark);
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    z-index: 2;
+}
+
+.course-card .course-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+.course-card .course-meta span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Category Cards */
+.category-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+}
+
+.category-card:hover {
+    border-color: var(--accent-blue);
+    background: var(--cream-light);
+    transform: translateY(-5px);
+}
+
+.category-card .category-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--navy-dark);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto var(--spacing-sm);
+}
+
+.category-card h5 {
+    color: var(--navy-dark);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 700;
+}
+
+.category-card p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* ==========================================
+   SECTIONS
+   ========================================== */
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--navy-dark);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg);
+    font-size: 1.05rem;
+}
+
+.categories-section {
+    background-color: var(--cream-light);
+    padding: var(--spacing-xl) 0;
+}
+
+.featured-section {
+    background-color: var(--cream-bg);
+    padding: var(--spacing-xl) 0;
+}
+
+/* ==========================================
+   FORMS
+   ========================================== */
+
+.form-control,
+.form-select {
+    background-color: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: white;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 4px rgba(91, 140, 201, 0.1);
+    color: var(--text-primary);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.95rem;
+}
+
+.input-group-text {
+    background-color: white;
+    border: 2px solid var(--border-color);
+    border-right: none;
+    color: var(--text-primary);
+}
+
+.input-group .form-control {
+    border-left: none;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: var(--accent-blue);
+}
+
+.is-invalid {
+    border-color: var(--accent-orange) !important;
+}
+
+.invalid-feedback {
+    color: var(--accent-orange);
+    font-size: 0.875rem;
+}
+
+/* ==========================================
+   BADGES
+   ========================================== */
+
+.badge {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.badge-primary {
+    background-color: var(--navy-dark);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--accent-yellow);
+    color: var(--navy-dark);
+}
+
+.badge-success {
+    background-color: var(--accent-green);
+    color: white;
+}
+
+.badge-info {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+.badge-secondary {
+    background-color: var(--text-muted);
+    color: white;
+}
+
+.badge-danger {
+    background-color: var(--accent-orange);
+    color: white;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+
+footer {
+    background-color: var(--navy-dark);
+    border-top: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: var(--spacing-xl) 0 var(--spacing-md);
+    margin-top: auto;
+}
+
+footer h5, footer h6 {
+    color: white;
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+footer a:hover {
+    color: var(--accent-yellow);
+    padding-left: 5px;
+}
+
+footer .social-links a {
+    font-size: 1.5rem;
+    margin: 0 var(--spacing-xs);
+    color: rgba(255, 255, 255, 0.7);
+    display: inline-block;
+}
+
+footer .social-links a:hover {
+    color: white;
+    transform: translateY(-3px);
+}
+
+footer hr {
+    background-color: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+    margin: var(--spacing-lg) 0;
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+
+.alert {
+    border: none;
+    border-radius: var(--border-radius-sm);
+    padding: 1rem 1.5rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: rgba(78, 205, 196, 0.1);
+    color: #2d7a6e;
+    border-left-color: var(--accent-green);
+}
+
+.alert-danger {
+    background-color: rgba(255, 107, 74, 0.1);
+    color: #c23616;
+    border-left-color: var(--accent-orange);
+}
+
+.alert-warning {
+    background-color: rgba(255, 217, 77, 0.15);
+    color: #9a6d00;
+    border-left-color: var(--accent-yellow);
+}
+
+.alert-info {
+    background-color: rgba(91, 140, 201, 0.1);
+    color: #2c5282;
+    border-left-color: var(--accent-blue);
+}
+
+/* ==========================================
+   TABLES
+   ========================================== */
+
+.table {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.table thead {
+    background-color: var(--cream-light);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table thead th {
+    color: var(--navy-dark);
+    font-weight: 700;
+    padding: 1rem;
+    border: none;
+}
+
+.table tbody tr {
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: var(--cream-light);
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border: none;
+}
+
+/* ==========================================
+   PAGINATION
+   ========================================== */
+
+.pagination {
+    margin-top: 2rem;
+}
+
+.page-link {
+    color: var(--navy-dark);
+    border: 2px solid var(--border-color);
+    background-color: white;
+    margin: 0 0.25rem;
+    border-radius: var(--border-radius-sm);
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--navy-dark);
+    color: white;
+    border-color: var(--navy-dark);
+}
+
+.page-item.active .page-link {
+    background-color: var(--navy-dark);
+    border-color: var(--navy-dark);
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    background-color: var(--cream-light);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   UTILITIES
+   ========================================== */
+
+.text-navy {
+    color: var(--navy-dark) !important;
+}
+
+.bg-cream {
+    background-color: var(--cream-bg) !important;
+}
+
+.bg-cream-light {
+    background-color: var(--cream-light) !important;
+}
+
+.bg-navy {
+    background-color: var(--navy-dark) !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.shadow {
+    box-shadow: var(--box-shadow) !important;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 10px;
+    background-color: var(--cream-light);
+}
+
+.progress-bar {
+    background-color: var(--accent-blue);
+    border-radius: 10px;
+}
+
+.progress-bar.bg-success {
+    background-color: var(--accent-green) !important;
+}
+
+/* Modal */
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-hover);
+}
+
+.modal-header {
+    background-color: var(--cream-light);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.modal-footer {
+    background-color: var(--cream-light);
+    border-top: 2px solid var(--border-color);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 992px) {
+    .hero-section h1 {
+        font-size: 2.8rem;
+    }
+    
+    .hero-stats {
+        gap: var(--spacing-md);
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 60vh;
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-section .lead {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .category-card .category-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+    }
+    
+    .btn {
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 1.9rem;
+    }
+    
+    .hero-stats {
+        flex-direction: row;
+        gap: var(--spacing-sm);
+    }
+    
+    .hero-stat .stat-number {
+        font-size: 2.2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}

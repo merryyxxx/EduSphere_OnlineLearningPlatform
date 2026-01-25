@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}My Learning Dashboard - EduSphere{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<div class="bg-cream-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold text-navy mb-2">
+                    <i class="bi bi-speedometer2"></i> My Learning Dashboard
+                </h1>
+                <p class="lead text-secondary mb-0">Welcome back, {{ current_user.name }}! Continue your learning journey.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="{{ url_for('courses') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Browse More Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, var(--accent-blue) 0%, var(--navy-dark) 100%); border: none;">
+                <div class="card-body text-white p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase opacity-75 mb-2">Enrolled Courses</h6>
+                            <h2 class="fw-bold mb-0">{{ enrollments|length }}</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="bi bi-journal-bookmark-fill" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, var(--accent-green) 0%, #2d7a6e 100%); border: none;">
+                <div class="card-body text-white p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase opacity-75 mb-2">Completed</h6>
+                            <h2 class="fw-bold mb-0">{{ enrollments|selectattr('completed')|list|length }}</h2>
+                        </div>
+                        <div class="bg-white bg-opacity-20 rounded-circle p-3">
+                            <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100" style="background: linear-gradient(135deg, var(--accent-yellow) 0%, #e8a800 100%); border: none;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="text-uppercase opacity-75 mb-2" style="color: var(--navy-dark);">In Progress</h6>
+                            <h2 class="fw-bold mb-0 text-navy">{{ enrollments|rejectattr('completed')|list|length }}</h2>
+                        </div>
+                        <div class="rounded-circle p-3" style="background: rgba(0,0,0,0.1);">
+                            <i class="bi bi-hourglass-split text-navy" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Courses Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="text-navy fw-bold mb-4">
+                <i class="bi bi-collection-play"></i> My Enrolled Courses
+            </h3>
+        </div>
+    </div>
+
+    <!-- Course Cards -->
+    <div class="row g-4">
+        {% if enrollments %}
+            {% for enrollment in enrollments %}
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge badge-primary">{{ enrollment.course.category.name }}</span>
+                            {% if enrollment.completed %}
+                                <span class="badge badge-success">
+                                    <i class="bi bi-check-circle"></i> Completed
+                                </span>
+                            {% else %}
+                                <span class="badge badge-warning" style="background-color: var(--accent-yellow); color: var(--navy-dark);">
+                                    <i class="bi bi-hourglass-split"></i> In Progress
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h5 class="card-title text-navy mb-3">{{ enrollment.course.title }}</h5>
+                        <p class="card-text text-secondary">
+                            {{ enrollment.course.description[:100] }}...
+                        </p>
+                        
+                        <!-- Progress Bar -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <small class="text-muted fw-semibold">Course Progress</small>
+                                <small class="text-navy fw-bold">{{ enrollment.progress }}%</small>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar {% if enrollment.completed %}bg-success{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ enrollment.progress }}%; background-color: {% if not enrollment.completed %}var(--accent-blue){% endif %};"
+                                     aria-valuenow="{{ enrollment.progress }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Meta -->
+                        <div class="mb-3 pb-3" style="border-bottom: 2px solid var(--border-color);">
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="bi bi-person"></i> {{ enrollment.course.instructor.name }}</span>
+                                <span><i class="bi bi-clock"></i> {{ enrollment.course.duration }}</span>
+                            </div>
+                            <div class="text-muted small mt-2">
+                                <i class="bi bi-calendar"></i> Enrolled on {{ enrollment.enrolled_at|date }}
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('course_details', course_id=enrollment.course.id) }}" 
+                               class="btn btn-primary flex-fill">
+                                <i class="bi bi-eye"></i> View Course
+                            </a>
+                            <button class="btn btn-outline-danger" 
+                                    onclick="confirmUnenroll({{ enrollment.id }}, '{{ enrollment.course.title }}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 5rem; color: var(--text-muted);"></i>
+                        <h4 class="mt-4 text-navy">No Enrolled Courses Yet</h4>
+                        <p class="text-muted mb-4">Start your learning journey by enrolling in a course today!</p>
+                        <a href="{{ url_for('courses') }}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search"></i> Browse Courses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Unenroll Confirmation Modal -->
+<div class="modal fade" id="unenrollModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: none; border-radius: var(--border-radius);">
+            <div class="modal-header" style="background-color: var(--cream-light); border-bottom: 2px solid var(--border-color);">
+                <h5 class="modal-title text-navy fw-bold">
+                    <i class="bi bi-exclamation-triangle"></i> Confirm Unenrollment
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-0">Are you sure you want to unenroll from <strong id="courseTitle" class="text-navy"></strong>?</p>
+                <p class="text-danger small mt-2 mb-0">
+                    <i class="bi bi-info-circle"></i> This action cannot be undone. Your progress will be lost.
+                </p>
+            </div>
+            <div class="modal-footer" style="background-color: var(--cream-light); border-top: 2px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmUnenrollBtn" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Unenroll
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmUnenroll(enrollmentId, courseTitle) {
+    document.getElementById('courseTitle').textContent = courseTitle;
+    document.getElementById('confirmUnenrollBtn').href = 
+        "{{ url_for('unenroll_course', enrollment_id=0) }}".replace('0', enrollmentId);
+    new bootstrap.Modal(document.getElementById('unenrollModal')).show();
+}
+</script>
+{% endblock %}

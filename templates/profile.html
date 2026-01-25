@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - EduSphere{% endblock %}
+
+{% block content %}
+<div class="bg-cream-light py-5">
+    <div class="container">
+        <h1 class="display-5 fw-bold text-navy mb-2">
+            <i class="bi bi-person-circle"></i> My Profile
+        </h1>
+        <p class="lead text-secondary">Manage your account information and preferences</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar - Profile Summary -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-body p-4 text-center">
+                    <!-- Avatar -->
+                    <div class="bg-navy text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" 
+                         style="width: 120px; height: 120px; font-size: 3rem;">
+                        {{ current_user.name[0]|upper }}
+                    </div>
+                    
+                    <!-- User Info -->
+                    <h4 class="fw-bold text-navy mb-1">{{ current_user.name }}</h4>
+                    <p class="text-muted mb-3">{{ current_user.email }}</p>
+                    
+                    <!-- Role Badge -->
+                    <span class="badge mb-4
+                        {% if current_user.role == 'admin' %}badge-danger
+                        {% elif current_user.role == 'instructor' %}badge-warning
+                        {% else %}badge-primary{% endif %}" 
+                        style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
+                        {% if current_user.role == 'admin' %}<i class="bi bi-shield-fill"></i>
+                        {% elif current_user.role == 'instructor' %}<i class="bi bi-person-video3"></i>
+                        {% else %}<i class="bi bi-person"></i>{% endif %}
+                        {{ current_user.role|capitalize }}
+                    </span>
+                    
+                    <hr>
+                    
+                    <!-- User Stats -->
+                    <div class="text-start">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted"><i class="bi bi-calendar text-primary"></i> Member Since</span>
+                            <strong class="text-navy">{{ current_user.created_at|date }}</strong>
+                        </div>
+                        
+                        {% if current_user.role == 'student' %}
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted"><i class="bi bi-book text-primary"></i> Enrolled Courses</span>
+                            <strong class="text-navy">{{ current_user.enrollments|length }}</strong>
+                        </div>
+                        {% elif current_user.role == 'instructor' %}
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted"><i class="bi bi-journal-bookmark text-primary"></i> Courses Created</span>
+                            <strong class="text-navy">{{ current_user.courses_taught|length }}</strong>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-cream-light">
+                    <h6 class="mb-0 text-navy fw-bold"><i class="bi bi-lightning-fill"></i> Quick Links</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% if current_user.role == 'student' %}
+                    <a href="{{ url_for('student_dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-speedometer2 text-primary"></i> My Dashboard
+                    </a>
+                    <a href="{{ url_for('courses') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-search text-primary"></i> Browse Courses
+                    </a>
+                    {% elif current_user.role == 'instructor' %}
+                    <a href="{{ url_for('instructor_dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-speedometer2 text-primary"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('create_course') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle text-primary"></i> Create Course
+                    </a>
+                    {% elif current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_panel') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-shield-lock text-primary"></i> Admin Panel
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content - Edit Profile -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-cream-light">
+                    <h5 class="mb-0 text-navy fw-bold">
+                        <i class="bi bi-person-gear"></i> Edit Profile Information
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('profile') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="name" class="form-label fw-semibold">Full Name *</label>
+                                {{ form.name(class="form-control form-control-lg" + (" is-invalid" if form.name.errors else ""), 
+                                            id="name") }}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.name.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="email" class="form-label fw-semibold">Email Address *</label>
+                                {{ form.email(class="form-control form-control-lg" + (" is-invalid" if form.email.errors else ""), 
+                                             id="email") }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.email.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="bio" class="form-label fw-semibold">Bio / About Me</label>
+                            {{ form.bio(class="form-control", rows="5", 
+                                       placeholder="Tell us about yourself, your expertise, and interests...", id="bio") }}
+                            <div class="form-text">
+                                <span id="charCount">{{ form.bio.data|length if form.bio.data else 0 }}</span>/500 characters
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Account Role</label>
+                            <input type="text" class="form-control form-control-lg" 
+                                   value="{{ current_user.role|capitalize }}" disabled>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i> Role cannot be changed for security reasons
+                            </small>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex gap-2">
+                            {{ form.submit(class="btn btn-primary btn-lg px-5") }}
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg px-5">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Account Security -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-cream-light">
+                    <h5 class="mb-0 text-navy fw-bold">
+                        <i class="bi bi-shield-check"></i> Account Security
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info mb-3">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <strong>Note:</strong> Password management features are not available in this demo version. 
+                        In a production environment, you would have options to change your password and enable two-factor authentication.
+                    </div>
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-key"></i> Change Password
+                    </button>
+                    <button class="btn btn-outline-secondary ms-2" disabled>
+                        <i class="bi bi-shield-lock"></i> Enable 2FA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Character counter for bio
+const bioField = document.getElementById('bio');
+const charCount = document.getElementById('charCount');
+
+if (bioField) {
+    bioField.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = 500;
+        charCount.textContent = currentLength;
+        
+        if (currentLength > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+            charCount.textContent = maxLength;
+        }
+    });
+}
+</script>
+{% endblock %}

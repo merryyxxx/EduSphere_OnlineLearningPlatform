@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Course - EduSphere{% endblock %}
+
+{% block content %}
+<div class="bg-cream-light py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('instructor_dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">{{ action }} Course</li>
+            </ol>
+        </nav>
+        
+        <h1 class="display-5 fw-bold text-navy mb-2">
+            <i class="bi bi-{% if action == 'Create' %}plus-circle{% else %}pencil{% endif %}"></i>
+            {{ action }} Course
+        </h1>
+        <p class="lead text-secondary">{% if action == 'Create' %}Share your knowledge by creating a new course{% else %}Update your course information{% endif %}</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-{% if action == 'Create' %}file-earmark-plus{% else %}pencil-square{% endif %}"></i>
+                        Course Information
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" novalidate id="courseForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Course Title -->
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-bold">Course Title *</label>
+                            {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else ""), 
+                                         placeholder="e.g., Complete Python Programming Masterclass", 
+                                         id="title") }}
+                            {% if form.title.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% else %}
+                                <small class="text-muted">Choose a clear, descriptive title for your course</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Course Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-bold">Course Description *</label>
+                            {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), 
+                                               rows="6", 
+                                               placeholder="Describe what students will learn in this course. Be specific about the skills they'll gain and projects they'll build.", 
+                                               id="description") }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% else %}
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span id="charCount">0</span> characters (minimum 20 required)
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Category and Level Row -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="category_id" class="form-label fw-bold">Category *</label>
+                                {{ form.category_id(class="form-select form-select-lg" + (" is-invalid" if form.category_id.errors else ""), 
+                                                   id="category_id") }}
+                                {% if form.category_id.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.category_id.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="level" class="form-label fw-bold">Difficulty Level *</label>
+                                {{ form.level(class="form-select form-select-lg" + (" is-invalid" if form.level.errors else ""), 
+                                             id="level") }}
+                                {% if form.level.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.level.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Price and Duration Row -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="price" class="form-label fw-bold">Course Price (USD) *</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </span>
+                                    {{ form.price(class="form-control" + (" is-invalid" if form.price.errors else ""), 
+                                                 placeholder="0.00", 
+                                                 step="0.01",
+                                                 id="price") }}
+                                </div>
+                                {% if form.price.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.price.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% else %}
+                                    <small class="text-muted">Set to 0 for free courses</small>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="duration" class="form-label fw-bold">Course Duration *</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white">
+                                        <i class="bi bi-clock"></i>
+                                    </span>
+                                    {{ form.duration(class="form-control" + (" is-invalid" if form.duration.errors else ""), 
+                                                    placeholder="e.g., 4 weeks, 20 hours", 
+                                                    id="duration") }}
+                                </div>
+                                {% if form.duration.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.duration.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Preview Info -->
+                        <div class="alert" style="background-color: rgba(91, 140, 201, 0.1); border-left: 4px solid var(--accent-blue);">
+                            <div class="d-flex">
+                                <i class="bi bi-info-circle-fill text-primary me-2" style="font-size: 1.3rem;"></i>
+                                <div>
+                                    <strong class="text-navy">Preview Note:</strong>
+                                    <p class="mb-0 small">After {{ action|lower }}ing your course, it will be visible to all students in the course catalog. Make sure all information is accurate and complete.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <hr class="my-4">
+                        
+                        <div class="d-flex gap-2">
+                            {{ form.submit(class="btn btn-primary btn-lg px-5") }}
+                            <a href="{{ url_for('instructor_dashboard') }}" class="btn btn-outline-secondary btn-lg px-5">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4" style="border: 2px solid var(--accent-blue);">
+                <div class="card-header" style="background-color: rgba(91, 140, 201, 0.1);">
+                    <h6 class="mb-0 text-navy fw-bold">
+                        <i class="bi bi-lightbulb-fill text-warning"></i> Tips for Creating Great Courses
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2"><strong>Clear Titles:</strong> Use specific titles that describe exactly what students will learn</li>
+                        <li class="mb-2"><strong>Detailed Descriptions:</strong> Highlight key learning outcomes and what makes your course unique</li>
+                        <li class="mb-2"><strong>Competitive Pricing:</strong> Research similar courses to set appropriate pricing</li>
+                        <li class="mb-2"><strong>Accurate Level:</strong> Choose the right difficulty level for your target audience</li>
+                        <li class="mb-0"><strong>Realistic Duration:</strong> Provide honest time estimates for course completion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Character counter for description
+const descriptionField = document.getElementById('description');
+const charCount = document.getElementById('charCount');
+
+function updateCharCount() {
+    if (descriptionField && charCount) {
+        charCount.textContent = descriptionField.value.length;
+    }
+}
+
+if (descriptionField) {
+    descriptionField.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initial count
+}
+
+// Form validation
+document.getElementById('courseForm').addEventListener('submit', function(e) {
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const duration = document.getElementById('duration').value.trim();
+    
+    let errors = [];
+    
+    if (title.length < 5) {
+        errors.push('• Title must be at least 5 characters long');
+    }
+    
+    if (description.length < 20) {
+        errors.push('• Description must be at least 20 characters long');
+    }
+    
+    if (isNaN(price) || price < 0) {
+        errors.push('• Please enter a valid price (0 or greater)');
+    }
+    
+    if (!duration) {
+        errors.push('• Duration is required');
+    }
+    
+    if (errors.length > 0) {
+        e.preventDefault();
+        alert('Please fix the following errors:\n\n' + errors.join('\n'));
+    }
+});
+
+// Price validation - only numbers and decimals
+document.getElementById('price').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9.]/g, '');
+    
+    // Ensure only one decimal point
+    const parts = this.value.split('.');
+    if (parts.length > 2) {
+        this.value = parts[0] + '.' + parts.slice(1).join('');
+    }
+});
+</script>
+{% endblock %}
