@@ -3,7 +3,6 @@ EduSphere - Complete Flask Application (Single File Version)
 All configurations, models, forms, and routes in one file
 """
 
-# ==================== IMPORTS ====================
 import os
 from datetime import datetime
 from functools import wraps
@@ -20,9 +19,14 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # Configuration
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'edusphere-secret-key-2024-dev'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or \
-    'mysql+pymysql://root:@localhost/edusphere_db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-secret') or 'edusphere-secret-key-2024-dev'
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "sqlite:///edusphere.db"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['COURSES_PER_PAGE'] = 9
 app.config['USERS_PER_PAGE'] = 10
@@ -688,7 +692,6 @@ if __name__ == '__main__':
     print('🚀 Starting server...')
     print('📍 URL: http://127.0.0.1:5000')
     print('━' * 50)
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
-    from flask import Flask
-app = Flask(__name__)
+
