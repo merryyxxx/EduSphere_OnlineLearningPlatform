@@ -1,6 +1,6 @@
 """
-EduSphere - Complete Flask Application (Single File Version)
-All configurations, models, forms, and routes in one file
+EduSphere - Complete Flask Application
+Deployment-ready version for Render with SQLite
 """
 
 import os
@@ -19,14 +19,16 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # Configuration
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-secret') or 'edusphere-secret-key-2024-dev'
-database_url = os.environ.get("DATABASE_URL")
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'edusphere-secret-key-2024-production')
 
-if database_url and database_url.startswith("postgres://"):
-    database_url = database_url.replace("postgres://", "postgresql://", 1)
+# SQLite Database Configuration
+basedir = os.path.abspath(os.path.dirname(__file__))
+database_path = os.path.join(basedir, 'instance', 'edusphere.db')
 
-app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "sqlite:///edusphere.db"
+# Ensure instance directory exists
+os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{database_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['COURSES_PER_PAGE'] = 9
 app.config['USERS_PER_PAGE'] = 10
@@ -693,5 +695,3 @@ if __name__ == '__main__':
     print('📍 URL: http://127.0.0.1:5000')
     print('━' * 50)
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
